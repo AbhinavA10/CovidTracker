@@ -1,5 +1,6 @@
 package com.opensourcebrothers.covidkwtracker;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -26,15 +27,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_LIST_FRAGMENT = "TAG_LIST_FRAGMENT";
     private PatientListFragment mPatientListFragment;
 
-    private ArrayList<Patient> mPatients =
-            new ArrayList<Patient>();
-
-    private PatientRecyclerViewAdapter mPatientAdapter =
-            new PatientRecyclerViewAdapter(mPatients);
-
-    private RecyclerView mRecyclerView;
-
     private static final String TAG = "MainActivity";
+
+    PatientViewModel patientViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,71 +46,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mPatientListFragment = (PatientListFragment) fm.findFragmentByTag(TAG_LIST_FRAGMENT);
         }
-        mPatients.add(new Patient(1,null,"d","d","d","d","d"));
-        mPatientListFragment.setPatients(mPatients);
+        // Retrieve the Earthquake View Model for this Activity.
+        patientViewModel = ViewModelProviders.of(this)
+                .get(PatientViewModel.class);
         //TODO: add refresh button
-        new JsonTask().execute("");
-    }
-}
-
-class JsonTask extends AsyncTask<String, String, ArrayList<Patient>> {
-    protected ArrayList<Patient> doInBackground(String... params) {
-        HttpURLConnection connection = null;
-        BufferedReader reader = null;
-
-        try {
-            URL url = new URL("https://covid-kw.herokuapp.com/api/v1/cases/all");
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-            InputStream stream = connection.getInputStream();
-            reader = new BufferedReader(new InputStreamReader(stream));
-
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line).append("\n");
-            }
-            JSONArray json_array = new JSONArray(builder.toString());
-            ArrayList<Patient> list = new ArrayList<Patient>();
-            for (int i = 0; i < json_array.length(); i++) {
-                JSONObject row = json_array.getJSONObject(i);
-                Patient patient = new Patient(row.getInt("id"), new Date(), row.getString("Patient"),
-                        row.getString("Status"), row.getString("Testing location"),
-                        row.getString("Transmission"), row.getString("Waterloo Region Case Number"));
-                list.add(patient);
-            }
-            return list;
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(ArrayList<Patient> result) {
-        try {
-            for (int i = 0; i < result.size(); i++) {
-                Log.d("Json Task result:", result.get(i).toString());
-            }
-            //TODO: update recycler view list
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
