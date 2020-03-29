@@ -1,6 +1,5 @@
 package com.opensourcebrothers.covidkwtracker;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,27 +19,18 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
-    public ProgressDialog pd;
     private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //TODO: add refresh button
         new JsonTask().execute("");
     }
 }
 
 
 class JsonTask extends AsyncTask<String, String, JSONArray> {
-
-    protected void onPreExecute() {
-        super.onPreExecute();
-//
-//        pd = new ProgressDialog(MainActivity.mContext);
-//        pd.setMessage("Please wait");
-//        pd.setCancelable(false);
-//        pd.show();
-    }
 
     protected JSONArray doInBackground(String... params) {
 
@@ -58,14 +48,14 @@ class JsonTask extends AsyncTask<String, String, JSONArray> {
 
             reader = new BufferedReader(new InputStreamReader(stream));
 
-            StringBuffer buffer = new StringBuffer();
-            String line = "";
+            StringBuilder builder = new StringBuilder();
+            String line;
 
             while ((line = reader.readLine()) != null) {
-                buffer.append(line+"\n");
+                builder.append(line).append("\n");
             }
 
-            return new JSONArray(buffer.toString());
+            return new JSONArray(builder.toString());
 
 
         } catch (MalformedURLException e) {
@@ -91,9 +81,8 @@ class JsonTask extends AsyncTask<String, String, JSONArray> {
 
     @Override
     protected void onPostExecute(JSONArray result) {
-
         try {
-            Log.d("PLSSS", result.toString(4));
+            Log.d("Json Task result:", result.toString(4));
         } catch (JSONException e) {
             e.printStackTrace();
         }
