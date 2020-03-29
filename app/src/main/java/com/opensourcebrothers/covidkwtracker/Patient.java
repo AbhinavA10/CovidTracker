@@ -31,17 +31,20 @@ public class Patient {
     public Date getDate() {
         return mDate;
     }
-
-    public String getmLocation() {
+    public String getLocation() {
         return mLocation;
     }
-
-    public String getmTransmission() {
+    public String getTransmission() {
         return mTransmission;
     }
-
-    public String getmCaseNumber() {
+    public String getCaseNumber() {
         return mCaseNumber;
+    }
+    public String getPatientDetails() {
+        return mPatientDetails;
+    }
+    public String getStatus() {
+        return mStatus;
     }
 
     public Patient(int id, Date date, String patientDetails,

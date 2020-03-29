@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.opensourcebrothers.covidkwtracker.databinding.ListItemPatientBinding;
+
 import java.util.List;
 
 public class PatientRecyclerViewAdapter extends
@@ -19,14 +21,17 @@ public class PatientRecyclerViewAdapter extends
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_patient, parent, false);
-        return new ViewHolder(view);
+        ListItemPatientBinding binding = ListItemPatientBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
     }
+
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Patient patient = mPatients.get(position);
-        holder.detailsView.setText(mPatients.get(position).toString());
+        holder.binding.setPatient(patient);
+        holder.binding.executePendingBindings();
     }
 
     @Override
@@ -35,19 +40,11 @@ public class PatientRecyclerViewAdapter extends
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public final View parentView;
-        public final TextView detailsView;
-        public Patient patient;
-
-        public ViewHolder(View view) {
-            super(view);
-            parentView = view;
-            detailsView = (TextView) view.findViewById(R.id.list_item_patient_details);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + detailsView.getText() + "'";
+        public final ListItemPatientBinding binding;
+        public ViewHolder(ListItemPatientBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
+
 }
