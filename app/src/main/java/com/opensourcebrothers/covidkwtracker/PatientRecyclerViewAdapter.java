@@ -22,7 +22,7 @@ public class PatientRecyclerViewAdapter extends
     private static final SimpleDateFormat TIME_FORMAT =
             new SimpleDateFormat("HH:mm", Locale.US);
     private static final NumberFormat MAGNITUDE_FORMAT =
-            new DecimalFormat("0.0");
+            new DecimalFormat("0");
 
     public PatientRecyclerViewAdapter(List<Patient> patients) {
         mPatients = patients;

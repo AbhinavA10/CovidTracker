@@ -38,6 +38,7 @@ public class PatientViewModel extends AndroidViewModel {
         return patients;
     }
     // Asynchronously load the Patients from the feed.
+    @SuppressLint("StaticFieldLeak")
     public void loadPatients() {
         new AsyncTask<Void, Void, List<Patient>>() {
             @Override
@@ -66,7 +67,6 @@ public class PatientViewModel extends AndroidViewModel {
                                 row.getString("Transmission"), row.getString("Waterloo Region Case Number"));
                         list.add(patient);
                     }
-                    Log.d(TAG,"HAHAHHAHAHAHAHHAHAHAHH");
                     return list;
 
                 } catch (MalformedURLException e) {

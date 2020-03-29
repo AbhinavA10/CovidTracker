@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mPatientListFragment = (PatientListFragment) fm.findFragmentByTag(TAG_LIST_FRAGMENT);
         }
-        // Retrieve the Earthquake View Model for this Activity.
         patientViewModel = ViewModelProviders.of(this)
                 .get(PatientViewModel.class);
         //TODO: add refresh button
