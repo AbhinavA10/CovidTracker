@@ -39,11 +39,6 @@ public class PatientViewModel extends AndroidViewModel {
     }
     // Asynchronously load the Patients from the feed.
     public void loadPatients() {
-        ArrayList<Patient> listo= new ArrayList<Patient>(2);
-        listo.add(new Patient(1,null,"d","d","d","d","d"));
-        listo.add(new Patient(2,null,"d","d","d","d","e"));
-        patients.setValue(listo);
-/*
         new AsyncTask<Void, Void, List<Patient>>() {
             @Override
             protected List<Patient> doInBackground(Void... voids) {
@@ -97,9 +92,8 @@ public class PatientViewModel extends AndroidViewModel {
 
             @Override
             protected void onPostExecute(List<Patient> result) {
-//                patients.setValue(result);
+                patients.setValue(result);
             }
         }.execute();
-        */
     }
 }
