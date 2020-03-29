@@ -16,7 +16,7 @@ import android.arch.persistence.room.PrimaryKey;
 public class Patient {
     @NonNull
     @PrimaryKey
-    private String mId;
+    private int mId;
     private Date mDate;
     private String mPatientDetails;
     private String mStatus;
@@ -24,7 +24,7 @@ public class Patient {
     private String mTransmission;
     private String mCaseNumber;
 
-    public String getId() {
+    public int getId() {
         return mId;
     }
 
@@ -44,7 +44,7 @@ public class Patient {
         return mCaseNumber;
     }
 
-    public Patient(String id, Date date, String patientDetails,
+    public Patient(int id, Date date, String patientDetails,
                    String status, String location, String transmission,
                    String caseNumber) {
         mId = id;
@@ -71,7 +71,7 @@ public class Patient {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Patient)
-            return (((Patient) obj).getId().contentEquals(mId));
+            return (((Patient) obj).getId()==(mId));
         else
             return false;
     }
