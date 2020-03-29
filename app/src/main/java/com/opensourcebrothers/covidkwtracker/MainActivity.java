@@ -31,10 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 class JsonTask extends AsyncTask<String, String, JSONArray> {
-
     protected JSONArray doInBackground(String... params) {
-
-
         HttpURLConnection connection = null;
         BufferedReader reader = null;
 
@@ -42,21 +39,18 @@ class JsonTask extends AsyncTask<String, String, JSONArray> {
             URL url =  new URL("https://covid-kw.herokuapp.com/api/v1/cases/all");
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
-
-
             InputStream stream = connection.getInputStream();
-
             reader = new BufferedReader(new InputStreamReader(stream));
 
             StringBuilder builder = new StringBuilder();
             String line;
-
             while ((line = reader.readLine()) != null) {
                 builder.append(line).append("\n");
             }
+            JSONArray json_result = new JSONArray(builder.toString());
 
+            //TODO: convert to custom object
             return new JSONArray(builder.toString());
-
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -83,6 +77,7 @@ class JsonTask extends AsyncTask<String, String, JSONArray> {
     protected void onPostExecute(JSONArray result) {
         try {
             Log.d("Json Task result:", result.toString(4));
+            //TODO: update UI
         } catch (JSONException e) {
             e.printStackTrace();
         }
