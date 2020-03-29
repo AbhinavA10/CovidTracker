@@ -1,72 +1,101 @@
 package com.opensourcebrothers.covidkwtracker;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.JSONException;
 
-import java.io.ByteArrayOutputStream;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
+    public ProgressDialog pd;
     private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new RetrieveFeedTask().execute("");
+        new JsonTask().execute("");
     }
 }
 
 
-class RetrieveFeedTask extends AsyncTask<String, Void, JSONArray> {
-    private static final String TAG_TASK = "---ASYNC_TASK---";
-    private Exception exception;
+class JsonTask extends AsyncTask<String, String, JSONArray> {
 
-    protected JSONArray doInBackground(String... urls) {
+    protected void onPreExecute() {
+        super.onPreExecute();
+//
+//        pd = new ProgressDialog(MainActivity.mContext);
+//        pd.setMessage("Please wait");
+//        pd.setCancelable(false);
+//        pd.show();
+    }
+
+    protected JSONArray doInBackground(String... params) {
+
+
+        HttpURLConnection connection = null;
+        BufferedReader reader = null;
+
         try {
-            URL url = new URL("https://covid-kw.herokuapp.com/api/v1/cases/all");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
+            URL url =  new URL("https://covid-kw.herokuapp.com/api/v1/cases/all");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
 
-            conn.connect();
-            InputStream is = conn.getInputStream();
 
-            // Read the stream
-            byte[] b = new byte[1024];
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            InputStream stream = connection.getInputStream();
 
-            while ( is.read(b) != -1)
-                baos.write(b);
+            reader = new BufferedReader(new InputStreamReader(stream));
 
-            String JSONResp = new String(baos.toByteArray());
-            JSONArray jsonArray = new JSONArray(JSONResp);
+            StringBuffer buffer = new StringBuffer();
+            String line = "";
 
-            return jsonArray;
-        } catch (Exception e) {
-            this.exception = e;
-            return null;
-        }
-    }
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line+"\n");
+            }
 
-    protected void onPostExecute(JSONArray json) {
-        if (this.exception != null) {
-            Log.e(TAG_TASK, "Error getting feed");
-            this.exception.printStackTrace();
-        } else {
+            return new JSONArray(buffer.toString());
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
             try {
-                Log.d(TAG_TASK, json.toString());
-            }
-            catch(Exception e) {
-                System.out.println("whoop");
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+        return null;
     }
 
+    @Override
+    protected void onPostExecute(JSONArray result) {
+
+        try {
+            Log.d("PLSSS", result.toString(4));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }
