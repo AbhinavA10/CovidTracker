@@ -63,9 +63,7 @@ public class Patient {
      */
     @Override
     public String toString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM.DD", Locale.US);
-        String dateString = sdf.format(mDate);
-        return dateString + ": " + mPatientDetails + ", " + mStatus;
+        return  mPatientDetails + ", " + mStatus;
     }
 
     @Override

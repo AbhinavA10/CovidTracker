@@ -1,14 +1,16 @@
 package com.opensourcebrothers.covidkwtracker;
 
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,20 +21,42 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG_LIST_FRAGMENT = "TAG_LIST_FRAGMENT";
+    private PatientListFragment mPatientListFragment;
+
+    private ArrayList<Patient> mPatients =
+            new ArrayList<Patient>();
+
+    private PatientRecyclerViewAdapter mPatientAdapter =
+            new PatientRecyclerViewAdapter(mPatients);
+
+    private RecyclerView mRecyclerView;
 
     private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FragmentManager fm = getSupportFragmentManager();
+
+        if (savedInstanceState == null) {
+            FragmentTransaction ft = fm.beginTransaction();
+            mPatientListFragment = new PatientListFragment();
+            ft.add(R.id.main_activity_frame, mPatientListFragment, TAG_LIST_FRAGMENT);
+            ft.commitNow();
+        } else {
+            mPatientListFragment = (PatientListFragment) fm.findFragmentByTag(TAG_LIST_FRAGMENT);
+        }
+        mPatients.add(new Patient(1,null,"d","d","d","d","d"));
+        mPatientListFragment.setPatients(mPatients);
         //TODO: add refresh button
         new JsonTask().execute("");
     }
 }
-
 
 class JsonTask extends AsyncTask<String, String, ArrayList<Patient>> {
     protected ArrayList<Patient> doInBackground(String... params) {
@@ -40,7 +64,7 @@ class JsonTask extends AsyncTask<String, String, ArrayList<Patient>> {
         BufferedReader reader = null;
 
         try {
-            URL url =  new URL("https://covid-kw.herokuapp.com/api/v1/cases/all");
+            URL url = new URL("https://covid-kw.herokuapp.com/api/v1/cases/all");
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
             InputStream stream = connection.getInputStream();
@@ -60,7 +84,6 @@ class JsonTask extends AsyncTask<String, String, ArrayList<Patient>> {
                         row.getString("Transmission"), row.getString("Waterloo Region Case Number"));
                 list.add(patient);
             }
-            //TODO: convert to custom object
             return list;
 
         } catch (MalformedURLException e) {
