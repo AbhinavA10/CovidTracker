@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Covid KW Tracker</string>
     <string name="covid_feed">
-        https://covid-kw.herokuapp.com/api/v1/cases/all
+            https://covid-kw.herokuapp.com/api/v1/cases/all
     </string>
 </resources>

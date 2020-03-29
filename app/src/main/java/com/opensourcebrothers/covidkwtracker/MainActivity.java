@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG_LIST_FRAGMENT = "TAG_LIST_FRAGMENT";
-    private PatientListFragment mPatientListFragment;
+    PatientListFragment mPatientListFragment;
 
     private static final String TAG = "MainActivity";
 

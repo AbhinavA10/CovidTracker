@@ -25,17 +25,21 @@ public class PatientListFragment extends Fragment {
     private PatientRecyclerViewAdapter mPatientAdapter = new PatientRecyclerViewAdapter(mPatients);
     protected PatientViewModel patientViewModel;
 
+    public PatientListFragment(){
+
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_patient_list,
                 container, false);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
+        mRecyclerView = view.findViewById(R.id.list);
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Context context = view.getContext();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -44,6 +48,8 @@ public class PatientListFragment extends Fragment {
 
 
     public void setPatients(List<Patient> patients) {
+        mPatients.clear();
+        mPatientAdapter.notifyDataSetChanged();
         for (Patient patient : patients) {
             if (!mPatients.contains(patient)) {
                 mPatients.add(patient);
@@ -51,7 +57,6 @@ public class PatientListFragment extends Fragment {
                         .notifyItemInserted(mPatients.indexOf(patient));
             }
         }
-        mPatientAdapter.notifyDataSetChanged();
         Toast.makeText(this.getContext(),"Update finished", Toast.LENGTH_LONG).show();
     }
 

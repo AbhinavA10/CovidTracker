@@ -12,10 +12,7 @@ import android.arch.persistence.room.PrimaryKey;
 /**
  * Stores details of a single Patient.
  */
-@Entity
 public class Patient {
-    @NonNull
-    @PrimaryKey
     private int mId;
     private Date mDate;
     private String mPatientDetails;
