@@ -22,10 +22,10 @@ We built a Flask API backend that uses `BeautifulSoup4` to scrape the [Region of
 Our Android app makes a request to the our above REST API, and displays it on screen to the user in a RecyclerView. Using Android's LiveData, ViewModel, and databinding, we display the data to the user in real time. 
 
 ## Accomplishments that We're proud of
-Our first time using 
+This was our first time making an Android App, as well as using Flask.
 
 ## What we learned
-We learnt a lot about how Android, and how to access a REST API JSON data feed.
+We learnt a lot about how Android interacts with other services, and how to access a REST API JSON data feed.
 
 ## What's next for Covid 19 Tracker
 We'd like to add another page, that displays a graph of the data to better visualize new cases. We're also aiming to implement a more user-friendly UI.
